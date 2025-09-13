@@ -3,7 +3,16 @@
 #include <vector>
 #include <cmath>
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::left;
+using std::right;
+using std::string;
+using std::vector;
+using std::cin;
+using std::setw;
+using std::setprecision;
+using std::fixed;
 
 struct Studentas
 {
@@ -24,10 +33,28 @@ Studentas Stud_iv()
     cout << "Kiek pazymiu turi " << Pirmas.var << " " << Pirmas.pav << ": "; cin >> m;
     for (int n = 1; n <= m; n++)
     {
-        cout << "Iveskite " << n << " pazymi:"; cin >> laik_paz;
+        bool tinkamas = false;
+        while(!tinkamas) {
+            cout << "Iveskite " << n << " pazymi:"; 
+            cin >> laik_paz;
+
+            if(cin.fail()) { //naudojamas patikrinti ar inputas teisingas
+                cin.clear();
+                cin.ignore(1000, '\n');
+                cout << "Ivedete ne skaiciu. Iveskite skaiciu." << endl; 
+                continue;
+            }
+
+            if(laik_paz > 0 && laik_paz <= 10){
+                tinkamas = true;
+            }
+            else {
+            cout << "Ivedete netinkama pazymi. Pabandykite dar karta." << endl; 
+            }
+        }   
         Pirmas.paz.push_back(laik_paz);
         suma += laik_paz;
-    }
+}
     cout << "Koks egzamino razultatas :"; cin >> Pirmas.egz;
     Pirmas.gal = double(suma) / double(m) * 0.4 + 0.6 * Pirmas.egz;
     
@@ -52,10 +79,8 @@ int main()
     for(auto& past : Grupe)
     {   
         cout << setw(15) << left << past.pav << " | " << setw(10) << left << past.var << " | " ;
-        /*for(auto& a : past.paz) 
-        {
-            cout << a << " ";
-        }*/
-        cout << setw(10) << past.gal << endl;
+        cout << setw(10) << fixed << setprecision(2) << past.gal << endl;
     }
 }
+
+
