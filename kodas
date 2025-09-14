@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <random> //atsitiktiniam skaiciui rasti
 
 using std::cout;
 using std::endl;
@@ -15,6 +16,9 @@ using std::setw;
 using std::setprecision;
 using std::fixed;
 using std::sort;
+using std::random_device;
+using std::mt19937;
+using std::uniform_int_distribution;
 
 struct Studentas
 {
@@ -58,33 +62,63 @@ bool paz_tikrinimas(int laik_paz){
 Studentas Stud_iv()
 {
     int m, laik_paz, suma = 0;
+    string ats;
     Studentas Pirmas;
-    cout << "Ivesti studento duomenis " << endl;
+    cout << "\n";
+    cout << "Prasau ivesti studento duomenis: " << endl;
     cout << "Vardas: "; cin >> Pirmas.var;
     cout << "Pavarde: "; cin >> Pirmas.pav;
-    //cout << "Kiek pazymiu turi " << Pirmas.var << " " << Pirmas.pav << ": "; cin >> m;
-    bool yra = true;
-    string ats;
-    int k = 1;
-    while(yra){
-        if(k == 1){
-            bool tinkamas = false;
-            while(!tinkamas) {
-                cout << "Iveskite " << k << " pazymi:"; 
-                cin >> laik_paz;
-                if(paz_tikrinimas(laik_paz) == true){
-                    Pirmas.paz.push_back(laik_paz);
-                    suma += laik_paz;
-                    tinkamas = true;
-                    k+=1;
-                }else{
-                    continue;
+    cout << "Ar norite, kad " << Pirmas.var << " pazymiai butu generuojami atsitiktinai (T arba N)? " << endl; cin >> ats; 
+    //cout << "\n";
+    if(ats == "T"){
+        bool dar = true;
+        int paz = 1;
+        while(dar){
+            if(paz == 1){
+
+            random_device rd;  
+            mt19937 gen(rd()); 
+            uniform_int_distribution<> dist(1, 10); //uztikrina, kad skaiciai butu butent nuo 1 iki 10.
+            int x = dist(gen);
+
+            cout << "Sugeneruotas " << paz << "-as pazymys yra " << x << endl;
+            Pirmas.paz.push_back(x);
+            suma += x;
+            paz += 1;
+            }
+            else{
+                cout << "Ar sugeneruoti dar viena pazymi (T arba N)?" <<endl; cin >> ats;
+                if(ats == "T"){
+                    random_device rd;  
+                    mt19937 gen(rd()); 
+                     uniform_int_distribution<> dist(1, 10);
+                    int x = dist(gen);
+                    cout << "Sugeneruotas " << paz << " yra " << x << endl;
+                    Pirmas.paz.push_back(x);
+                    suma += x;
+                    paz += 1;
+                }
+                else{
+                    dar = false;
                 }
             }
-        }
-        else{
-            cout << "Ar " << Pirmas.var << " dar turi pazymiu (T arba N)?" << endl; cin >> ats;
-            if(ats == "T"){
+    }
+    random_device rd;  
+    mt19937 gen(rd()); 
+    uniform_int_distribution<> dist(1, 10);
+    int x = dist(gen);
+    cout << "Sugeneruotas egzamino rezultatas yra :" << x << endl;
+    Pirmas.egz = x;
+    Pirmas.gal = double(suma) / double(m) * 0.4 + 0.6 * Pirmas.egz;
+    Pirmas.med = double(Mediana(Pirmas)) * 0.4 + 0.6 * Pirmas.egz;
+    
+    return Pirmas;
+    }
+    else{
+        bool yra = true;
+        int k = 1;
+        while(yra){
+            if(k == 1){
                 bool tinkamas = false;
                 while(!tinkamas) {
                     cout << "Iveskite " << k << " pazymi:"; 
@@ -97,33 +131,49 @@ Studentas Stud_iv()
                     }else{
                         continue;
                     }
-                Pirmas.paz.push_back(laik_paz);
-                suma += laik_paz;
                 }
             }
             else{
-                yra = false;
+                cout << "Ar " << Pirmas.var << " dar turi pazymiu (T arba N)?" << endl; cin >> ats;
+                if(ats == "T"){
+                    bool tinkamas = false;
+                    while(!tinkamas) {
+                        cout << "Iveskite " << k << " pazymi:"; 
+                        cin >> laik_paz;
+                        if(paz_tikrinimas(laik_paz) == true){
+                            Pirmas.paz.push_back(laik_paz);
+                            suma += laik_paz;
+                            tinkamas = true;
+                            k+=1;
+                        }else{
+                            continue;
+                        }
+                    Pirmas.paz.push_back(laik_paz);
+                    suma += laik_paz;
+                    }
+                }
+                else{
+                    yra = false;
+                }
             }
         }
-    }
-    bool tinkamas = false;
-    int egz;
-    while(!tinkamas){
-        cout << "Koks egzamino razultatas :"; cin >> egz;
-        if(paz_tikrinimas(egz) == true){
-            Pirmas.egz = egz;
-            Pirmas.gal = double(suma) / double(m) * 0.4 + 0.6 * Pirmas.egz;
-            Pirmas.med = double(Mediana(Pirmas)) * 0.4 + 0.6 * Pirmas.egz;
-            tinkamas = true;
+        bool tinkamas = false;
+        int egz;
+        while(!tinkamas){
+            cout << "Koks egzamino razultatas :"; cin >> egz;
+            if(paz_tikrinimas(egz) == true){
+                Pirmas.egz = egz;
+                Pirmas.gal = double(suma) / double(m) * 0.4 + 0.6 * Pirmas.egz;
+                Pirmas.med = double(Mediana(Pirmas)) * 0.4 + 0.6 * Pirmas.egz;
+                tinkamas = true;
+            }
+            else{
+                continue;
+            }
         }
-        else{
-            continue;
-        }
+        return Pirmas;
     }
-    return Pirmas;
 }
-
-
 
 int main()
 {
