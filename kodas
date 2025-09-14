@@ -62,24 +62,50 @@ Studentas Stud_iv()
     cout << "Ivesti studento duomenis " << endl;
     cout << "Vardas: "; cin >> Pirmas.var;
     cout << "Pavarde: "; cin >> Pirmas.pav;
-    cout << "Kiek pazymiu turi " << Pirmas.var << " " << Pirmas.pav << ": "; cin >> m;
-    for (int n = 1; n <= m; n++)
-    {
-        bool tinkamas = false;
-        while(!tinkamas) {
-            cout << "Iveskite " << n << " pazymi:"; 
-            cin >> laik_paz;
-            if(paz_tikrinimas(laik_paz) == true){
+    //cout << "Kiek pazymiu turi " << Pirmas.var << " " << Pirmas.pav << ": "; cin >> m;
+    bool yra = true;
+    string ats;
+    int k = 1;
+    while(yra){
+        if(k == 1){
+            bool tinkamas = false;
+            while(!tinkamas) {
+                cout << "Iveskite " << k << " pazymi:"; 
+                cin >> laik_paz;
+                if(paz_tikrinimas(laik_paz) == true){
+                    Pirmas.paz.push_back(laik_paz);
+                    suma += laik_paz;
+                    tinkamas = true;
+                    k+=1;
+                }else{
+                    continue;
+                }
+            }
+        }
+        else{
+            cout << "Ar " << Pirmas.var << " dar turi pazymiu (T arba N)?" << endl; cin >> ats;
+            if(ats == "T"){
+                bool tinkamas = false;
+                while(!tinkamas) {
+                    cout << "Iveskite " << k << " pazymi:"; 
+                    cin >> laik_paz;
+                    if(paz_tikrinimas(laik_paz) == true){
+                        Pirmas.paz.push_back(laik_paz);
+                        suma += laik_paz;
+                        tinkamas = true;
+                        k+=1;
+                    }else{
+                        continue;
+                    }
                 Pirmas.paz.push_back(laik_paz);
                 suma += laik_paz;
-                tinkamas = true;
-            }else{
-                continue;
+                }
             }
-        Pirmas.paz.push_back(laik_paz);
-        suma += laik_paz;
+            else{
+                yra = false;
+            }
+        }
     }
-}
     bool tinkamas = false;
     int egz;
     while(!tinkamas){
@@ -96,6 +122,8 @@ Studentas Stud_iv()
     }
     return Pirmas;
 }
+
+
 
 int main()
 {
@@ -114,7 +142,7 @@ int main()
     while (!tinkamas){
         cout << "Ar noretumete gauti tik vidurki (V), tik mediana (M) ar abu (A)? "; cin >> pasirinkimas;
         if(pasirinkimas == "V"){
-            cout << setw(15) << left << "Pavarde " << setw(10) << left << "Vardas " << setw(15) << left << "Galutinis (Vid.)" << endl;
+            cout << setw(15) << left << "Pavarde " << setw(15) << left << "Vardas " << setw(15) << left << "Galutinis (Vid.)" << endl;
             cout << "--------------------------------------------------" <<endl;
             for(auto& past : Grupe)
             {   
