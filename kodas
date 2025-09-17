@@ -22,6 +22,8 @@ using std::uniform_int_distribution;
 using std::vector;
 using std::ws;
 using std::ifstream;
+using std::istringstream; // stringe esančių žodžių sk skaičiavimui
+
 
 struct Studentas
 {
@@ -214,7 +216,7 @@ int main()
 {
     vector<Studentas> Grupe;
     string pas; // naudotojo pasirinkimas.
-    cout << "Ar noretumete studentus irasyti pats ar nuskaityti is failo (p arba f)?" << endl;
+    cout << "Ar noretumete sudentus irasyti pats ar nuskaityti is failo (p arba f)?" << endl;
     cin >> pas;
 
     if (pas == "p")
@@ -227,20 +229,31 @@ int main()
             Grupe.push_back(Stud_iv());
         }
     }
-
+//failo atidarymas.
     if (pas == "f")
     {
         cout << "Nuskaitomas failas..." << endl;
-        ifstream fd("kursiokai.txt");
+        ifstream fd("studentai10000.txt");
         string eil;
         getline(fd, eil);
+        // metodas suskaičiavimui, kiek specifinių žodžių yra tekste.
+        istringstream iss(eil);
+        string zodis;
+        int ND_sk = 0;
+
+        while (iss >> zodis){
+            if(zodis.rfind("ND", 0) == 0){ // prasideda nuo...
+                ND_sk++; 
+            }
+        }
         int paz;
-        for (int i = 1; i <= 30; i++)
+        cout<<"EILUCIU SKAICIUS "<<ND_sk<<endl;
+        for (int i = 1; i <= 10000; i++)
         {
             Studentas stud;
             int suma = 0;
             fd >> ws >> stud.var >> ws >> stud.pav >> ws;
-            for (int j = 1; j <= 5; j++)
+            for (int j = 1; j <= ND_sk; j++)
             {
                 fd >> paz >> ws; 
                 stud.paz.push_back(paz);
@@ -301,3 +314,4 @@ int main()
         }
     }
 }
+
