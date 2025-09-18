@@ -246,7 +246,7 @@ int main()
     if (pas == "f")
     {
         cout << "Nuskaitomas failas..." << endl;
-        ifstream fd("kursiokai2.txt");
+        ifstream fd("studentai1000000.txt");
         string eil;
         getline(fd, eil);
         istringstream iss(eil);
