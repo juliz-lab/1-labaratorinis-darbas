@@ -10,6 +10,8 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::fixed;
+using std::ifstream;
+using std::istringstream; // stringe esančių žodžių sk skaičiavimui
 using std::left;
 using std::mt19937;
 using std::random_device;
@@ -21,7 +23,8 @@ using std::string;
 using std::uniform_int_distribution;
 using std::vector;
 using std::ws;
-using std::ifstream;
+//using std::out;
+using std::ofstream;
 
 struct Studentas
 {
@@ -52,7 +55,7 @@ double Mediana(const Studentas &s)
 bool paz_tikrinimas(int laik_paz)
 {
     if (cin.fail()) // naudojamas patikrinti ar inputas teisingas.
-    { 
+    {
         cin.clear();
         cin.ignore(1000, '\n');
         cout << "Ivedete ne skaiciu. Iveskite skaiciu." << endl;
@@ -75,6 +78,20 @@ int atsitiktinis_sk()
     mt19937 gen(rd());
     uniform_int_distribution<> dist(1, 10); // uztikrina, kad skaiciai butu butent nuo 1 iki 10.
     return dist(gen);
+}
+
+bool rusiavimas(Studentas Pirmas, Studentas Antras)
+{
+    if (Pirmas.var < Antras.var)
+    {
+        return true;
+    }
+    else if (Pirmas.pav < Antras.pav)
+    {
+        return true;
+    }
+    else
+        return false;
 }
 
 Studentas Stud_iv()
@@ -231,23 +248,25 @@ int main()
     if (pas == "f")
     {
         cout << "Nuskaitomas failas..." << endl;
-        ifstream fd("kursiokai.txt");
+        ifstream fd("studentai1000000.txt");
         string eil;
         getline(fd, eil);
-        int paz;
-        for (int i = 1; i <= 30; i++)
+        istringstream iss(eil);
+        while (getline(fd, eil))
         {
             Studentas stud;
-            int suma = 0;
-            fd >> ws >> stud.var >> ws >> stud.pav >> ws;
-            for (int j = 1; j <= 5; j++)
+            int paz, suma = 0;
+            istringstream iss(eil); // paverčiame eilutę į objektą.
+            iss >> stud.var >> stud.pav;
+            while (iss >> paz)
             {
-                fd >> paz >> ws; 
                 stud.paz.push_back(paz);
                 suma += paz;
             }
-            fd >> stud.egz >> ws;
-            stud.gal = double(suma) / double(5) * 0.4 + 0.6 * stud.egz;
+            suma -= paz;
+            stud.egz = stud.paz.back();
+            stud.paz.pop_back();
+            stud.gal = double(suma) / double(stud.paz.size()) * 0.4 + 0.6 * stud.egz;
             stud.med = double(Mediana(stud)) * 0.4 + 0.6 * stud.egz;
             Grupe.push_back(stud);
         }
@@ -256,40 +275,43 @@ int main()
     bool tinkamas = false;
     string pasirinkimas;
 
+    sort(Grupe.begin(), Grupe.end(), rusiavimas);
+
+    ofstream out("rezultatai.txt");
     while (!tinkamas)
     {
         cout << "Ar noretumete gauti tik vidurki (V), tik mediana (M) ar abu (A)? ";
         cin >> pasirinkimas;
         if (pasirinkimas == "V")
         {
-            cout << setw(16) << left << "Pavarde " << setw(16) << left << "Vardas " << setw(15) << left << "Galutinis (Vid.)" << endl;
-            cout << "--------------------------------------------------" << endl;
+            out << setw(16) << left << "Pavarde " << setw(16) << left << "Vardas " << setw(15) << left << "Galutinis (Vid.)" << endl;
+            out << "--------------------------------------------------" << endl;
             for (auto &past : Grupe)
             {
-                cout << setw(15) << left << past.pav << " | " << setw(12) << left << past.var << " | ";
-                cout << setw(10) << fixed << setprecision(2) << past.gal << endl;
+                out << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
+                out << setw(10) << fixed << setprecision(2) << past.gal << endl;
             }
             tinkamas = true;
         }
         else if (pasirinkimas == "M")
         {
-            cout << setw(15) << left << "Pavarde " << setw(15) << left << "Vardas " << setw(15) << left << "Galutinis (Med.)" << endl;
-            cout << "-------------------------------------------------" << endl;
+            out << setw(15) << left << "Pavarde " << setw(15) << left << "Vardas " << setw(15) << left << "Galutinis (Med.)" << endl;
+            out << "-------------------------------------------------" << endl;
             for (auto &past : Grupe)
             {
-                cout << setw(13) << left << past.pav << " | " << setw(13) << left << past.var << " | ";
-                cout << setw(15) << fixed << setprecision(2) << past.med << endl;
+                out << setw(13) << left << past.pav << " | " << setw(13) << left << past.var << " | ";
+                out << setw(15) << fixed << setprecision(2) << past.med << endl;
             }
             tinkamas = true;
         }
         else if (pasirinkimas == "A")
         {
-            cout << setw(18) << left << "Pavarde " << setw(17) << left << "Vardas " << setw(21) << left << "Galutinis (Vid.)" << setw(15) << left << "Galutinis (Med.)" << endl;
-            cout << "----------------------------------------------------------------" << endl;
+            out << setw(18) << left << "Pavarde " << setw(17) << left << "Vardas " << setw(21) << left << "Galutinis (Vid.)" << setw(15) << left << "Galutinis (Med.)" << endl;
+            out << "----------------------------------------------------------------" << endl;
             for (auto &past : Grupe)
             {
-                cout << setw(16) << left << past.pav << " | " << setw(15) << left << past.var << " | ";
-                cout << setw(17) << fixed << setprecision(2) << past.gal << " | " << setw(15) << past.med << endl;
+                out << setw(16) << left << past.pav << " | " << setw(15) << left << past.var << " | ";
+                out << setw(17) << fixed << setprecision(2) << past.gal << " | " << setw(15) << past.med << endl;
             }
             tinkamas = true;
         }
@@ -300,4 +322,5 @@ int main()
             cout << "Ivedete netinkama pasirinkima. Pabandykite dar karta." << endl;
         }
     }
+    out.close();
 }
