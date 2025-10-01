@@ -218,7 +218,7 @@ Studentas Stud_iv()
             if (paz_tikrinimas(egz) == true)
             {
                 Pirmas.egz = egz;
-                Pirmas.gal = double(suma) / double(m) * 0.4 + 0.6 * Pirmas.egz;
+                Pirmas.gal = double(suma) / double(Pirmas.paz.size()) * 0.4 + 0.6 * Pirmas.egz;
                 Pirmas.med = double(Mediana(Pirmas)) * 0.4 + 0.6 * Pirmas.egz;
                 tinkamas = true;
             }
@@ -235,8 +235,7 @@ void failu_generavimas(int eil, int paz)
 {
     string fvardas = "studentai" + to_string(eil) + ".txt";
     ofstream out(fvardas);
-
-    out<<"Vardas Pavarde";
+    out << "Vardas Pavarde ";
     for (int i = 1; i <= paz; i++)
     {
         out << "ND" << i << " ";
@@ -259,6 +258,29 @@ void failu_generavimas(int eil, int paz)
     out.close();
 }
 
+bool islaike(const Studentas &s)
+{
+    return s.gal >= 5.0;
+}
+
+void spausdink_studenta(ofstream &out, const Studentas &s, string tipas)
+{
+    out << setw(15) << left << s.pav << setw(11) << left << s.var;
+    if (tipas == "V")
+    {
+        out << setw(10) << fixed << setprecision(2) << s.gal;
+    }
+    if (tipas == "M")
+    {
+        out << setw(10) << fixed << setprecision(2) << s.med;
+    }
+    if (tipas == "A")
+    {
+        out << setw(10) << fixed << setprecision(2) << s.gal << setw(10) << fixed << setprecision(2) << s.med;
+    }
+    out << endl;
+}
+
 int main()
 {
     vector<Studentas> Grupe;
@@ -276,19 +298,19 @@ int main()
             Grupe.push_back(Stud_iv());
         }
     }
-
+    int sk;
     if (pas == "f")
     {
-        int paz;
+
         cout << "Sugeneruosime 5 skirtingo dydzio failus. " << endl;
         cout << "Kiek pazymiu generuojam kiekvienam studentui? ";
-        cin >> paz;
+        cin >> sk;
         cout << "Generuojami failai..." << endl;
-        failu_generavimas(10000, paz);
-        failu_generavimas(100000, paz);
-        failu_generavimas(1000000, paz);
-        failu_generavimas(10000000, paz);
-        stringstream buffer = bufer_nusk("studentai1000000.txt");
+        failu_generavimas(10000, sk);
+        failu_generavimas(100000, sk);
+        failu_generavimas(1000000, sk);
+        failu_generavimas(10000000, sk);
+        stringstream buffer = bufer_nusk("studentai10000.txt");
         string eil;
         getline(buffer, eil);
         while (getline(buffer, eil))
@@ -311,55 +333,101 @@ int main()
         }
     }
 
-    bool tinkamas = false;
-    string pasirinkimas;
-
-    sort(Grupe.begin(), Grupe.end(), rusiavimas);
-
-    ofstream out("rezultatai.txt");
-    while (!tinkamas)
+    vector<Studentas> moksliukai;
+    vector<Studentas> nemoksos;
+    for (auto &stud : Grupe)
     {
-        cout << "Ar noretumete gauti tik vidurki (V), tik mediana (M) ar abu (A)? ";
-        cin >> pasirinkimas;
-        if (pasirinkimas == "V")
+        if (islaike(stud))
         {
-            out << setw(16) << left << "Pavarde " << setw(16) << left << "Vardas " << setw(15) << left << "Galutinis (Vid.)" << endl;
-            out << "--------------------------------------------------" << endl;
-            for (auto &past : Grupe)
-            {
-                out << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
-                out << setw(10) << fixed << setprecision(2) << past.gal << endl;
-            }
-            tinkamas = true;
-        }
-        else if (pasirinkimas == "M")
-        {
-            out << setw(15) << left << "Pavarde " << setw(15) << left << "Vardas " << setw(15) << left << "Galutinis (Med.)" << endl;
-            out << "-------------------------------------------------" << endl;
-            for (auto &past : Grupe)
-            {
-                out << setw(13) << left << past.pav << " | " << setw(13) << left << past.var << " | ";
-                out << setw(15) << fixed << setprecision(2) << past.med << endl;
-            }
-            tinkamas = true;
-        }
-        else if (pasirinkimas == "A")
-        {
-            out << setw(18) << left << "Pavarde " << setw(17) << left << "Vardas " << setw(21) << left << "Galutinis (Vid.)" << setw(15) << left << "Galutinis (Med.)" << endl;
-            out << "----------------------------------------------------------------" << endl;
-            for (auto &past : Grupe)
-            {
-                out << setw(16) << left << past.pav << " | " << setw(15) << left << past.var << " | ";
-                out << setw(17) << fixed << setprecision(2) << past.gal << " | " << setw(15) << past.med << endl;
-            }
-            tinkamas = true;
+            moksliukai.push_back(stud);
         }
         else
         {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            cout << "Ivedete netinkama pasirinkima. Pabandykite dar karta." << endl;
+            nemoksos.push_back(stud);
         }
     }
-    out.close();
+    string pasirinkimas;
+
+    // sort(Grupe.begin(), Grupe.end(), rusiavimas);
+
+    // ofstream out("rezultatai.txt");
+
+    ofstream outm("moksliukai.txt");
+    ofstream outn("nemoksos.txt");
+    cout << "Ar noretumete gauti tik vidurki (V), tik mediana (M) ar abu (A)? ";
+    cin >> pasirinkimas;
+    outn << setw(16) << left << "Pavarde " << setw(16) << left << "Vardas ";
+    outm << setw(16) << left << "Pavarde " << setw(16) << left << "Vardas ";
+    if (pasirinkimas == "V"){ outm << "Gal."<<endl; outn << "Gal."<<endl;}
+    if (pasirinkimas == "M"){ outm << "Med."<<endl;  outn << "Med."<<endl;}
+    if (pasirinkimas == "A"){ outm << setw(10) << "Gal. "<< setw(10) << " Med."<<endl; outm << setw(10) << "Gal. "<< setw(10) << " Med."<<endl;}
+
+    for (auto &stud : moksliukai)
+    {
+        spausdink_studenta(outm, stud, pasirinkimas);
+    }
+
+    for (auto &stud : nemoksos)
+    {
+        spausdink_studenta(outn, stud, pasirinkimas);
+    }
+    /*if (pasirinkimas == "V")
+    {
+        out << setw(15) << left << "Galutinis (Vid.)" << endl;
+        out << "--------------------------------------------------" << endl;
+        for(auto &past : moksliukai){
+            outm << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
+            outm << setw(10) << fixed << setprecision(2) << past.gal << endl;
+        }
+        for(auto &past : nemoksos){
+            outn << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
+            outn << setw(10) << fixed << setprecision(2) << past.gal << endl;
+        }
+        tinkamas = true;
+    }
+
+    else if (pasirinkimas == "M")
+    {
+        out << setw(15) << left << "Galutinis (Med.)" << endl;
+        out << "-------------------------------------------------" << endl;
+                    for(auto &past : moksliukai){
+            out << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
+            out << setw(10) << fixed << setprecision(2) << past.gal << endl;
+        }
+        for(auto &past : nemoksos){
+            out << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
+            out << setw(10) << fixed << setprecision(2) << past.gal << endl;
+        }
+        for (auto &past : Grupe)
+        {
+            out << setw(13) << left << past.pav << " | " << setw(13) << left << past.var << " | ";
+            out << setw(15) << fixed << setprecision(2) << past.med << endl;
+        }
+        tinkamas = true;
+    }
+
+    else if (pasirinkimas == "A")
+    {
+        out << "Galutinis (Vid.)" << setw(15) << left << "Galutinis (Med.)" << endl;
+        out << "----------------------------------------------------------------" << endl;
+        for(auto &past : moksliukai){
+            outm << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
+            outm << setw(10) << fixed << setprecision(2) << past.gal << " | " << setw(15) << past.med << endl;
+        }
+        for(auto &past : nemoksos){
+            outn << setw(15) << left << past.pav << " | " << setw(14) << left << past.var << " | ";
+            outn << setw(10) << fixed << setprecision(2) << past.gal << " | " << setw(15) << past.med << endl;
+        }
+        tinkamas = true;
+    }
+    else
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Ivedete netinkama pasirinkima. Pabandykite dar karta." << endl;
+    }
+}*/
+    outm.close();
+    outn.close();
 }
+
