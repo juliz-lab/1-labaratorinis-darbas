@@ -6,6 +6,8 @@
 #include <random> //atsitiktiniam skaiciui rasti
 #include <fstream>
 
+#include "bufer_nusk.h"
+
 using std::cin;
 using std::cout;
 using std::endl;
@@ -23,8 +25,10 @@ using std::string;
 using std::uniform_int_distribution;
 using std::vector;
 using std::ws;
-//using std::out;
+// using std::out;
 using std::ofstream;
+using std::stringstream;
+using std::to_string;
 
 struct Studentas
 {
@@ -142,7 +146,7 @@ Studentas Stud_iv()
         int x = atsitiktinis_sk();
         cout << "Sugeneruotas egzamino rezultatas yra :" << x << endl;
         Pirmas.egz = x;
-        Pirmas.gal = double(suma) / double(m) * 0.4 + 0.6 * Pirmas.egz;
+        Pirmas.gal = double(suma) / double(Pirmas.paz.size()) * 0.4 + 0.6 * Pirmas.egz;
         Pirmas.med = double(Mediana(Pirmas)) * 0.4 + 0.6 * Pirmas.egz;
 
         return Pirmas;
@@ -227,6 +231,34 @@ Studentas Stud_iv()
     }
 }
 
+void failu_generavimas(int eil, int paz)
+{
+    string fvardas = "studentai" + to_string(eil) + ".txt";
+    ofstream out(fvardas);
+
+    out<<"Vardas Pavarde";
+    for (int i = 1; i <= paz; i++)
+    {
+        out << "ND" << i << " ";
+    }
+    out << "Egz" << endl;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(1, 10);
+
+    for (int i = 1; i <= eil; i++)
+    {
+        out << "Vardas" << i << " Pavarde" << i << " ";
+        for (int j = 1; j <= paz; j++)
+        {
+            out << dist(gen) << " ";
+        }
+        out << dist(gen) << endl;
+    }
+    out.close();
+}
+
 int main()
 {
     vector<Studentas> Grupe;
@@ -247,12 +279,19 @@ int main()
 
     if (pas == "f")
     {
-        cout << "Nuskaitomas failas..." << endl;
-        ifstream fd("studentai1000000.txt");
+        int paz;
+        cout << "Sugeneruosime 5 skirtingo dydzio failus. " << endl;
+        cout << "Kiek pazymiu generuojam kiekvienam studentui? ";
+        cin >> paz;
+        cout << "Generuojami failai..." << endl;
+        failu_generavimas(10000, paz);
+        failu_generavimas(100000, paz);
+        failu_generavimas(1000000, paz);
+        failu_generavimas(10000000, paz);
+        stringstream buffer = bufer_nusk("studentai1000000.txt");
         string eil;
-        getline(fd, eil);
-        istringstream iss(eil);
-        while (getline(fd, eil))
+        getline(buffer, eil);
+        while (getline(buffer, eil))
         {
             Studentas stud;
             int paz, suma = 0;
