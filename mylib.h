@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <random> //atsitiktiniam skaiciui rasti
 #include <fstream>
+#include <chrono>
+#include <map>
 
 using std::cin;
 using std::cout;
@@ -27,6 +29,7 @@ using std::ws;
 using std::ofstream;
 using std::stringstream;
 using std::to_string;
+using std::map;
 
 struct Studentas
 {
@@ -41,25 +44,10 @@ struct Studentas
 double Mediana(const Studentas &s);
 bool paz_tikrinimas(int laik_paz);
 int atsitiktinis_sk();
-bool rusiavimas(Studentas Pirmas, Studentas Antras);
+bool rusiavimas(Studentas Pirmas, Studentas Antras, string pagal);
 Studentas Stud_iv();
 void failu_generavimas(int eil, int paz);
 bool islaike(const Studentas &s);
-void spausdink_studenta(ofstream &out, const Studentas &s, string tipas);
+//void spausdink_studenta(ofstream &out, const Studentas &s, string tipas);
 stringstream bufer_nusk(const std::string &failas);
-
-
-
-
-/*
-#ifndef BUFER_NUSK_H
-#define BUFER_NUSK_H
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-
-std::stringstream bufer_nusk(const std::string &failas);
-
-#endif*/
+void spausdink_grupe(const vector <Studentas> &vekt, string tipas);
