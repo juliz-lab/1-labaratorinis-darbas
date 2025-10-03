@@ -1,9 +1,10 @@
 #include "mylib.h"
 
-stringstream bufer_nusk(const string &failas){
+stringstream bufer_nusk(const string &failas)
+{
     ifstream fd(failas);
     stringstream buffer;
-    buffer << fd.rdbuf(); //Visas failas iš karto perkeliamas į buferį
+    buffer << fd.rdbuf(); // Visas failas iš karto perkeliamas į buferį
     fd.close();
     return buffer;
 }
@@ -50,20 +51,17 @@ int atsitiktinis_sk()
     mt19937 gen(rd());
     uniform_int_distribution<> dist(1, 10); // uztikrina, kad skaiciai butu butent nuo 1 iki 10.
     return dist(gen);
-}
+} 
 
-bool rusiavimas(Studentas Pirmas, Studentas Antras)
+bool rusiavimas(Studentas Pirmas, Studentas Antras, string pagal)
 {
-    if (Pirmas.var < Antras.var)
-    {
-        return true;
-    }
-    else if (Pirmas.pav < Antras.pav)
-    {
-        return true;
-    }
-    else
-        return false;
+    if (pagal == "V") // pagal vardą
+        return Pirmas.var < Antras.var;
+    else if (pagal == "P") // pagal pavardę
+        return Pirmas.pav < Antras.pav;
+    else if (pagal == "G") // pagal galutinį pažymį
+        return Pirmas.gal < Antras.gal;
+    return false;
 }
 
 Studentas Stud_iv()
@@ -202,13 +200,13 @@ Studentas Stud_iv()
 void failu_generavimas(int eil, int paz)
 {
     string fvardas = "studentai" + to_string(eil) + ".txt";
-    ofstream out(fvardas);
-    out << "Vardas Pavarde ";
+    stringstream srautas;
+    srautas << "Vardas Pavarde ";
     for (int i = 1; i <= paz; i++)
     {
-        out << "ND" << i << " ";
+        srautas << "ND" << i << " ";
     }
-    out << "Egz" << endl;
+    srautas << "Egz" << endl;
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -216,13 +214,15 @@ void failu_generavimas(int eil, int paz)
 
     for (int i = 1; i <= eil; i++)
     {
-        out << "Vardas" << i << " Pavarde" << i << " ";
+        srautas << "Vardas" << i << " Pavarde" << i << " ";
         for (int j = 1; j <= paz; j++)
         {
-            out << dist(gen) << " ";
+            srautas << dist(gen) << " ";
         }
-        out << dist(gen) << endl;
+        srautas << dist(gen) << endl;
     }
+    ofstream out(fvardas);
+    out << srautas.str();
     out.close();
 }
 
@@ -231,9 +231,9 @@ bool islaike(const Studentas &s)
     return s.gal >= 5.0;
 }
 
-void spausdink_studenta(ofstream &out, const Studentas &s, string tipas)
+/*void spausdink_studenta(ofstream &out, const Studentas &s, string tipas)
 {
-    out << setw(15) << left << s.pav << setw(11) << left << s.var;
+    out << setw(15) << left << s.pav << setw(15) << left << s.var;
     if (tipas == "V")
     {
         out << setw(10) << fixed << setprecision(2) << s.gal;
@@ -247,4 +247,59 @@ void spausdink_studenta(ofstream &out, const Studentas &s, string tipas)
         out << setw(10) << fixed << setprecision(2) << s.gal << setw(10) << fixed << setprecision(2) << s.med;
     }
     out << endl;
+}*/
+
+void spausdink_grupe(const vector <Studentas> &vekt, string tipas)
+{
+    stringstream ss;
+    ss << setw(16) << left << "Pavarde" << setw(15) << left << "Vardas";
+    if (tipas == "V")
+    {
+        ss << setw(10) << left << "Gal.";
+        for (auto &stud : vekt) {
+            ss << endl << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.gal;
+        }
+        
+
+    }
+    if (tipas == "M")
+    {
+        ss << "Med.";
+        for (auto &stud : vekt) {
+            ss << endl << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.med;
+        }
+    }
+    if (tipas == "A")
+    {
+        ss << setw(10) << "Gal. " << setw(10) << " Med.";
+        for (auto &stud : vekt) {
+            ss << endl << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.gal << setw(10) << fixed << setprecision(2) << stud.med;
+        }
+    }
+
+    if (islaike(vekt[0])) {
+        ofstream out("moksliukai.txt");
+        out << ss.str();
+        out.close();
+    }
+    else {
+        ofstream out("nemoksos.txt");
+        out << ss.str();
+        out.close();
+    }
+    
+    /*ss << setw(15) << left << s.pav << setw(15) << left << s.var;
+    if (tipas == "V")
+    {
+        out << setw(10) << fixed << setprecision(2) << s.gal;
+    }
+    if (tipas == "M")
+    {
+        out << setw(10) << fixed << setprecision(2) << s.med;
+    }
+    if (tipas == "A")
+    {
+        out << setw(10) << fixed << setprecision(2) << s.gal << setw(10) << fixed << setprecision(2) << s.med;
+    }
+    out << endl;*/
 }
