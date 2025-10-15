@@ -2,89 +2,45 @@
 
 int main()
 {
-    vector<Studentas> Grupe;
-    string pas; // naudotojo pasirinkimas.
-    cout << "Ar noretumete studentus irasyti pats ar nuskaityti is failo (p arba f)?" << endl;
+    string pas, arf; // naudotojo pasirinkimas.
+    char ats, pagal;
+    cout << "Ar noretumete, kad studentai butu saugomi sarase ar vektoriuje (l arba v)?" << endl;
     cin >> pas;
-
-    if (pas == "p")
+    cout << "Ar noretumete studentus irasyti pats, ar nuskaityti is failo (p arba f)?" << endl;
+    cin >> arf;
+    if (pas == "l")
     {
-        cout << "Kiek studentu yra grupeje? ";
-        int n;
-        cin >> n;
-        for (auto z = 0; z < n; z++)
+        list<Studentas> Grupe;
+        list<Studentas> moksliukai, nemoksos;
+
+        if (arf == "p")
         {
-            Grupe.push_back(Stud_iv());
+            irasysiu_pats(Grupe);
         }
-        ofstream out("rezultatas.txt");
-        out << "Vardas " << setw(15) << "Pavarde " << setw(10) << "Gal." << endl;
-        for (auto &s : Grupe)
+
+        string pasirinkimas;
+        if (arf == "f")
         {
-            out << s.var << setw(15) << s.pav << setw(5) << s.gal << endl;
+            generuok_failus();
         }
-    }
-    int sk;
-    char ats;
-    string pasirinkimas, pagal;
-    if (pas == "f")
-    {
-        cout << "Ar noretumete sugeneruoti failus dabar T/N? ";
+        cout << "Koki faila noretumete nuskaityti: a - 1000, b - 10000, c - 100000, d - 1000000, e - 10000000? ";
         cin >> ats;
-        if (ats == 'T')
-        {
-            cout << "Sugeneruosime 5 skirtingo dydzio failus. " << endl;
-            cout << "Kiek pazymiu generuojam kiekvienam studentui? ";
-            cin >> sk;
-            cout << "Generuojami failai..." << endl;
-
-            auto start = std::chrono::high_resolution_clock::now();
-            auto st = start;
-            failu_generavimas(1000, sk);
-            std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
-            cout << "Failo su 1000 sukurimas uztruko: " << diff.count() << " s\n";
-
-            start = std::chrono::high_resolution_clock::now();
-            failu_generavimas(10000, sk);
-            diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
-            cout << "Failo su 10000 sukurimas uztruko: " << diff.count() << " s\n";
-
-            start = std::chrono::high_resolution_clock::now();
-            failu_generavimas(100000, sk);
-            diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
-            cout << "Failo su 100000 sukurimas uztruko: " << diff.count() << " s\n";
-
-            start = std::chrono::high_resolution_clock::now();
-            failu_generavimas(1000000, sk);
-            diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
-            cout << "Failo su 1000000 sukurimas uztruko: " << diff.count() << " s\n";
-
-            start = std::chrono::high_resolution_clock::now();
-            failu_generavimas(10000000, sk);
-            diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
-            cout << "Failo su 10000000 sukurimas uztruko: " << diff.count() << " s\n";
-
-            diff = std::chrono::high_resolution_clock::now() - st; // Skirtumas (s)
-            cout << "Visu failu sukurimas uztruko: " << diff.count() << " s\n";
-        }
-        cout << "Koki faila noretumete nuskaityti: A - 1000, B - 10000, C - 100000, D - 1000000, E - 10000000? ";
-        cin >> ats;
-        map<char, int> tipai = {{'A', 1000}, {'B', 10000}, {'C', 100000}, {'D', 1000000}, {'E', 10000000}};
+        map<char, int> tipai = {{'a', 1000}, {'b', 10000}, {'c', 100000}, {'d', 1000000}, {'e', 10000000}};
         int irasu_sk = tipai[ats];
-
         string fail_pav = "studentai" + to_string(irasu_sk) + ".txt";
 
-        cout << "Pagal ka rikiuojame? V - vardas, P - pavarde, G - galutinis pazymys: ";
+        cout << "Pagal ka rikiuojame? v - vardas, p - pavarde, g - galutinis pazymys: ";
         cin >> pagal;
 
-        cout << "Ar noretumete gauti tik vidurki (V), tik mediana (M) ar abu (A)? ";
+        cout << "Ar noretumete gauti tik vidurki (v), tik mediana (m) ar abu (a)? ";
         cin >> pasirinkimas;
 
         auto start = std::chrono::high_resolution_clock::now();
         auto st = start; // visam laikui skaičiuoti
         stringstream buffer = bufer_nusk(fail_pav);
-
         string eil;
         getline(buffer, eil);
+
         while (getline(buffer, eil))
         {
             Studentas stud;
@@ -108,7 +64,6 @@ int main()
         cout << "Failo " << fail_pav << " nuskaitymas uztruko: " << diff.count() << " s\n";
 
         start = std::chrono::high_resolution_clock::now();
-        vector<Studentas> moksliukai, nemoksos;
 
         for (auto &stud : Grupe)
         {
@@ -121,38 +76,112 @@ int main()
                 nemoksos.push_back(stud);
             }
         }
+
         diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
         cout << "Failo " << fail_pav << " studentu padalijimas uztruko: " << diff.count() << " s\n";
 
         start = std::chrono::high_resolution_clock::now();
-        sort(moksliukai.begin(), moksliukai.end(), [pagal](const Studentas &a, const Studentas &b)
-             {
-        if (pagal == "V") {
-            return a.var < b.var;
-        }
-        else if (pagal == "P") {
-            return a.pav < b.pav;
-        }
-        else if (pagal == "G") {
-            return a.gal > b.gal;
-        }
-        else return false; });
+        rusiuok_list(moksliukai, pagal);
         diff = std::chrono::high_resolution_clock::now() - start;
         cout << "Failo " << fail_pav << " moksliuku isrusiavimas uztruko: " << diff.count() << " s\n";
 
         start = std::chrono::high_resolution_clock::now();
-        sort(nemoksos.begin(), nemoksos.end(), [pagal](const Studentas &a, const Studentas &b)
-             {
-        if (pagal == "V") {
-            return a.var < b.var;
+        rusiuok_list(nemoksos, pagal);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo " << fail_pav << " nemoksu isrusiavimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        spausdink_grupe(moksliukai, pasirinkimas);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo " << fail_pav << " moksliuku spausdinimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        spausdink_grupe(nemoksos, pasirinkimas);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo " << fail_pav << " nemoksu spausdinimas uztruko: " << diff.count() << " s\n";
+
+        diff = std::chrono::high_resolution_clock::now() - st;
+        cout << fail_pav << " testo veikimo laikas: " << diff.count() << " s\n";
+    }
+    else
+    {
+        vector<Studentas> Grupe;
+        vector<Studentas> moksliukai, nemoksos;
+
+        if (arf == "p")
+        {
+            irasysiu_pats(Grupe);
         }
-        else if (pagal == "P") {
-            return a.pav < b.pav;
+
+        string pasirinkimas;
+        if (arf == "f")
+        {
+            generuok_failus();
         }
-        else if (pagal == "G") {
-            return a.gal > b.gal;
+        cout << "Koki faila noretumete nuskaityti: a - 1000, b - 10000, c - 100000, d - 1000000, e - 10000000? ";
+        cin >> ats;
+        map<char, int> tipai = {{'a', 1000}, {'b', 10000}, {'c', 100000}, {'d', 1000000}, {'e', 10000000}};
+        int irasu_sk = tipai[ats];
+        string fail_pav = "studentai" + to_string(irasu_sk) + ".txt";
+
+        cout << "Pagal ka rikiuojame? v - vardas, p - pavarde, g - galutinis pazymys: ";
+        cin >> pagal;
+
+        cout << "Ar noretumete gauti tik vidurki (v), tik mediana (m) ar abu (a)? ";
+        cin >> pasirinkimas;
+
+        auto start = std::chrono::high_resolution_clock::now();
+        auto st = start; // visam laikui skaičiuoti
+        stringstream buffer = bufer_nusk(fail_pav);
+        string eil;
+        getline(buffer, eil);
+
+        while (getline(buffer, eil))
+        {
+            Studentas stud;
+            int paz, suma = 0;
+            istringstream iss(eil); // paverčiame eilutę į objektą.
+            iss >> stud.var >> stud.pav;
+            while (iss >> paz)
+            {
+                stud.paz.push_back(paz);
+                suma += paz;
+            }
+            suma -= paz;
+            stud.egz = stud.paz.back();
+            stud.paz.pop_back();
+            stud.gal = double(suma) / double(stud.paz.size()) * 0.4 + 0.6 * stud.egz;
+            stud.med = double(Mediana(stud)) * 0.4 + 0.6 * stud.egz;
+            Grupe.push_back(stud);
         }
-        else return false; });
+
+        std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
+        cout << "Failo " << fail_pav << " nuskaitymas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+
+        for (auto &stud : Grupe)
+        {
+            if (islaike(stud))
+            {
+                moksliukai.push_back(stud);
+            }
+            else
+            {
+                nemoksos.push_back(stud);
+            }
+        }
+
+        diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
+        cout << "Failo " << fail_pav << " studentu padalijimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        rusiuok_vect(moksliukai, pagal);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo " << fail_pav << " moksliuku isrusiavimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        rusiuok_vect(nemoksos, pagal);
         diff = std::chrono::high_resolution_clock::now() - start;
         cout << "Failo " << fail_pav << " nemoksu isrusiavimas uztruko: " << diff.count() << " s\n";
 
@@ -170,4 +199,3 @@ int main()
         cout << fail_pav << " testo veikimo laikas: " << diff.count() << " s\n";
     }
 }
-
