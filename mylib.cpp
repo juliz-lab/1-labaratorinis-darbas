@@ -1,5 +1,77 @@
 #include "mylib.h"
 
+void generuok_failus()
+{
+    int sk;
+    char ats;
+    cout << "Ar noretumete sugeneruoti failus dabar (t arba n)? ";
+    cin >> ats;
+    if (ats == 't')
+    {
+        cout << "Sugeneruosime 5 skirtingo dydzio failus. " << endl;
+        cout << "Kiek pazymiu generuojam kiekvienam studentui? ";
+        cin >> sk;
+        cout << "Generuojami failai..." << endl;
+
+        auto start = std::chrono::high_resolution_clock::now();
+        auto st = start;
+        failu_generavimas(1000, sk);
+        std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
+        cout << "Failo su 1000 sukurimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        failu_generavimas(10000, sk);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo su 10000 sukurimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        failu_generavimas(100000, sk);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo su 100000 sukurimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        failu_generavimas(1000000, sk);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo su 1000000 sukurimas uztruko: " << diff.count() << " s\n";
+
+        start = std::chrono::high_resolution_clock::now();
+        failu_generavimas(10000000, sk);
+        diff = std::chrono::high_resolution_clock::now() - start;
+        cout << "Failo su 10000000 sukurimas uztruko: " << diff.count() << " s\n";
+
+        diff = std::chrono::high_resolution_clock::now() - st;
+        cout << "Visu failu sukurimas uztruko: " << diff.count() << " s\n";
+    }
+}
+
+// list
+
+void rusiuok_list(list <Studentas> &konteineris, char pagal = 'g')
+{
+    konteineris.sort([pagal](const Studentas &a, const Studentas &b)
+                     {
+                         if (pagal == 'v') return a.var < b.var;
+                         else if (pagal == 'p') return a.pav < b.pav;
+                         else return a.gal > b.gal; });
+}
+
+// vector
+void rusiuok_vect(vector <Studentas> &konteineris, char pagal = 'g')
+{
+    sort(konteineris.begin(), konteineris.end(), [pagal](const Studentas &a, const Studentas &b)
+         {
+        if (pagal == 'v') {
+            return a.var < b.var;
+        }
+        else if (pagal == 'p') {
+            return a.pav < b.pav;
+        }
+        else if (pagal == 'g') {
+            return a.gal > b.gal;
+        }
+        else return false; });
+}
+
 stringstream bufer_nusk(const string &failas)
 {
     ifstream fd(failas);
@@ -51,7 +123,7 @@ int atsitiktinis_sk()
     mt19937 gen(rd());
     uniform_int_distribution<> dist(1, 10); // uztikrina, kad skaiciai butu butent nuo 1 iki 10.
     return dist(gen);
-} 
+}
 
 bool rusiavimas(Studentas Pirmas, Studentas Antras, string pagal)
 {
@@ -229,77 +301,4 @@ void failu_generavimas(int eil, int paz)
 bool islaike(const Studentas &s)
 {
     return s.gal >= 5.0;
-}
-
-/*void spausdink_studenta(ofstream &out, const Studentas &s, string tipas)
-{
-    out << setw(15) << left << s.pav << setw(15) << left << s.var;
-    if (tipas == "V")
-    {
-        out << setw(10) << fixed << setprecision(2) << s.gal;
-    }
-    if (tipas == "M")
-    {
-        out << setw(10) << fixed << setprecision(2) << s.med;
-    }
-    if (tipas == "A")
-    {
-        out << setw(10) << fixed << setprecision(2) << s.gal << setw(10) << fixed << setprecision(2) << s.med;
-    }
-    out << endl;
-}*/
-
-void spausdink_grupe(const vector <Studentas> &vekt, string tipas)
-{
-    stringstream ss;
-    ss << setw(16) << left << "Pavarde" << setw(15) << left << "Vardas";
-    if (tipas == "V")
-    {
-        ss << setw(10) << left << "Gal.";
-        for (auto &stud : vekt) {
-            ss << endl << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.gal;
-        }
-        
-
-    }
-    if (tipas == "M")
-    {
-        ss << "Med.";
-        for (auto &stud : vekt) {
-            ss << endl << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.med;
-        }
-    }
-    if (tipas == "A")
-    {
-        ss << setw(10) << "Gal. " << setw(10) << " Med.";
-        for (auto &stud : vekt) {
-            ss << endl << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.gal << setw(10) << fixed << setprecision(2) << stud.med;
-        }
-    }
-
-    if (islaike(vekt[0])) {
-        ofstream out("moksliukai.txt");
-        out << ss.str();
-        out.close();
-    }
-    else {
-        ofstream out("nemoksos.txt");
-        out << ss.str();
-        out.close();
-    }
-    
-    /*ss << setw(15) << left << s.pav << setw(15) << left << s.var;
-    if (tipas == "V")
-    {
-        out << setw(10) << fixed << setprecision(2) << s.gal;
-    }
-    if (tipas == "M")
-    {
-        out << setw(10) << fixed << setprecision(2) << s.med;
-    }
-    if (tipas == "A")
-    {
-        out << setw(10) << fixed << setprecision(2) << s.gal << setw(10) << fixed << setprecision(2) << s.med;
-    }
-    out << endl;*/
 }
