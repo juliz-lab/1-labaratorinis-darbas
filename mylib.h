@@ -151,3 +151,33 @@ void irasysiu_pats(T &Grupe)
         Grupe.push_back(stud);
     }
 }
+
+template <typename T>
+void Failo_nuskaitymas(const string &failas, T &Grupe)
+{
+    ifstream fd(failas);
+    stringstream buffer;
+    buffer << fd.rdbuf(); // Visas failas iš karto perkeliamas į buferį
+    fd.close();
+    string eil;
+    getline(buffer, eil);
+
+    while (getline(buffer, eil))
+    {
+        Studentas stud;
+        int paz, suma = 0;
+        istringstream iss(eil); // paverčiame eilutę į objektą.
+        iss >> stud.var >> stud.pav;
+        while (iss >> paz)
+        {
+            stud.paz.push_back(paz);
+            suma += paz;
+        }
+        suma -= paz;
+        stud.egz = stud.paz.back();
+        stud.paz.pop_back();
+        stud.gal = double(suma) / double(stud.paz.size()) * 0.4 + 0.6 * stud.egz;
+        stud.med = double(Mediana(stud)) * 0.4 + 0.6 * stud.egz;
+        Grupe.push_back(stud);
+    }
+}
