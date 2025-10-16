@@ -14,7 +14,6 @@ int main()
     {
         list<Studentas> Grupe;
         list<Studentas> moksliukai, nemoksos;
-
         if (arf == "p")
         {
             irasysiu_pats(Grupe);
@@ -78,28 +77,8 @@ int main()
 
             auto start = std::chrono::high_resolution_clock::now();
             auto st = start; // visam laikui skaičiuoti
-            stringstream buffer = bufer_nusk(fail_pav);
-            string eil;
-            getline(buffer, eil);
 
-            while (getline(buffer, eil))
-            {
-                Studentas stud;
-                int paz, suma = 0;
-                istringstream iss(eil); // paverčiame eilutę į objektą.
-                iss >> stud.var >> stud.pav;
-                while (iss >> paz)
-                {
-                    stud.paz.push_back(paz);
-                    suma += paz;
-                }
-                suma -= paz;
-                stud.egz = stud.paz.back();
-                stud.paz.pop_back();
-                stud.gal = double(suma) / double(stud.paz.size()) * 0.4 + 0.6 * stud.egz;
-                stud.med = double(Mediana(stud)) * 0.4 + 0.6 * stud.egz;
-                Grupe.push_back(stud);
-            }
+            Failo_nuskaitymas(fail_pav, Grupe);
 
             std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
             cout << "Failo " << fail_pav << " nuskaitymas uztruko: " << diff.count() << " s\n";
@@ -217,28 +196,8 @@ int main()
 
             auto start = std::chrono::high_resolution_clock::now();
             auto st = start; // visam laikui skaičiuoti
-            stringstream buffer = bufer_nusk(fail_pav);
-            string eil;
-            getline(buffer, eil);
-
-            while (getline(buffer, eil))
-            {
-                Studentas stud;
-                int paz, suma = 0;
-                istringstream iss(eil); // paverčiame eilutę į objektą.
-                iss >> stud.var >> stud.pav;
-                while (iss >> paz)
-                {
-                    stud.paz.push_back(paz);
-                    suma += paz;
-                }
-                suma -= paz;
-                stud.egz = stud.paz.back();
-                stud.paz.pop_back();
-                stud.gal = double(suma) / double(stud.paz.size()) * 0.4 + 0.6 * stud.egz;
-                stud.med = double(Mediana(stud)) * 0.4 + 0.6 * stud.egz;
-                Grupe.push_back(stud);
-            }
+            
+            Failo_nuskaitymas(fail_pav, Grupe);
 
             std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - start; // Skirtumas (s)
             cout << "Failo " << fail_pav << " nuskaitymas uztruko: " << diff.count() << " s\n";
