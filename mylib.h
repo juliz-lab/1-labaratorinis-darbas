@@ -61,7 +61,7 @@ void spausdink_grupe(const T &grupe, string tipas)
 {
     stringstream ss;
     ss << setw(16) << left << "Pavarde" << setw(15) << left << "Vardas";
-    if (tipas == "V")
+    if (tipas == "v")
     {
         ss << setw(10) << left << "Gal.";
         for (auto &stud : grupe)
@@ -70,7 +70,7 @@ void spausdink_grupe(const T &grupe, string tipas)
                << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.gal;
         }
     }
-    if (tipas == "M")
+    if (tipas == "m")
     {
         ss << "Med.";
         for (auto &stud : grupe)
@@ -79,7 +79,7 @@ void spausdink_grupe(const T &grupe, string tipas)
                << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.med;
         }
     }
-    if (tipas == "A")
+    if (tipas == "a")
     {
         ss << setw(10) << "Gal. " << setw(10) << " Med.";
         for (auto &stud : grupe)
@@ -89,7 +89,7 @@ void spausdink_grupe(const T &grupe, string tipas)
         }
     }
     auto it = grupe.begin(); //iteratorius i 1 elementa
-    if (it->gal >= 5) // 
+    if (it->gal >= 5)
     {
         ofstream out("moksliukai.txt");
         out << ss.str();
@@ -104,19 +104,50 @@ void spausdink_grupe(const T &grupe, string tipas)
 }
 
 template <typename T>
+void ekrane_grupe(const T &grupe, string tipas)
+{
+    cout << setw(16) << left << "Pavarde" << setw(15) << left << "Vardas";
+    if (tipas == "v")
+    {
+        cout << setw(10) << left << "Gal." << setw(16) << left << "Vieta atmintyje";
+        for (auto &stud : grupe)
+        {
+            cout << endl
+               << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.gal << setw(16) << left << &stud;
+        }
+    }
+    if (tipas == "m")
+    {
+        cout << setw(10) << left << "Med." << setw(16) << left << "Vieta atmintyje";
+        for (auto &stud : grupe)
+        {
+            cout << endl
+               << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << fixed << setprecision(2) << stud.med << setw(16) << left << &stud;
+        }
+    }
+    if (tipas == "a")
+    {
+        cout << setw(10) << left << "Gal." << setw(10) << left << " Med." << setw(16) << left << "Vieta atmintyje";
+        for (auto &stud : grupe)
+        {
+            cout << endl
+               << setw(16) << left << stud.pav << setw(15) << left << stud.var << setw(10) << left << fixed << setprecision(2) << stud.gal << setw(10) << left << fixed << setprecision(2) << stud.med << setw(16) << left << &stud;
+        }
+    }
+    cout << endl;
+}
+
+template <typename T>
 void irasysiu_pats(T &Grupe)
 {
     cout << "Kiek studentu yra grupeje? ";
     int n;
     cin >> n;
-    for (auto z = 0; z < n; z++)
+
+    for (int z = 0; z < n; z++)
     {
-        Grupe.push_back(Stud_iv());
-    }
-    ofstream out("rezultatas.txt");
-    out << "Vardas " << setw(15) << "Pavarde " << setw(10) << "Gal." << endl;
-    for (auto &s : Grupe)
-    {
-        out << s.var << setw(15) << s.pav << setw(5) << s.gal << endl;
+        Studentas stud = Stud_iv();
+        cout << "Studento objektas saugomas atmintyje: " << &stud << endl; // adreso spausdinimas
+        Grupe.push_back(stud);
     }
 }
