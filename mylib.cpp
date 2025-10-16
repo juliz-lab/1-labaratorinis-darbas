@@ -44,19 +44,16 @@ void generuok_failus()
     }
 }
 
-// list
-
-void rusiuok_list(list <Studentas> &konteineris, char pagal = 'g')
+void rusiuok_list(list<Studentas> &konteineris, char pagal = 'g')
 {
     konteineris.sort([pagal](const Studentas &a, const Studentas &b)
                      {
-                         if (pagal == 'v') return a.var < b.var;
-                         else if (pagal == 'p') return a.pav < b.pav;
-                         else return a.gal > b.gal; });
+        if (pagal == 'v') return a.var < b.var; 
+        else if (pagal == 'p') return a.pav < b.pav; 
+        else return a.gal > b.gal; });
 }
 
-// vector
-void rusiuok_vect(vector <Studentas> &konteineris, char pagal = 'g')
+void rusiuok_vect(vector<Studentas> &konteineris, char pagal = 'g')
 {
     sort(konteineris.begin(), konteineris.end(), [pagal](const Studentas &a, const Studentas &b)
          {
@@ -70,15 +67,6 @@ void rusiuok_vect(vector <Studentas> &konteineris, char pagal = 'g')
             return a.gal > b.gal;
         }
         else return false; });
-}
-
-stringstream bufer_nusk(const string &failas)
-{
-    ifstream fd(failas);
-    stringstream buffer;
-    buffer << fd.rdbuf(); // Visas failas iš karto perkeliamas į buferį
-    fd.close();
-    return buffer;
 }
 
 double Mediana(const Studentas &s)
