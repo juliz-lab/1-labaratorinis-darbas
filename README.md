@@ -15,8 +15,8 @@
 
 **V0.2** <br>
 1. Sukurta studentų duomenų generavimo programa;
-3. Sukkurta funkcija studentų išskaidymui į išlaikiusius ir neišlaikiusius;
-4.  Pridėta galimybė vartotojui pasirinkti, pagal ką rikiuoti rezultatus;
+3. Sukurta funkcija studentų išskaidymui į išlaikiusius ir neišlaikiusius;
+4. Pridėta galimybė vartotojui pasirinkti, pagal ką rikiuoti rezultatus;
 5. Funkcijos ir struktūros perkeltos į atskirus failus;
 
 **V0.3** <br>
