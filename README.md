@@ -149,3 +149,146 @@ Rezultatai:
 
 
 Kompiuterio, su kuriuo atlikta analizė, parametrai: 2.00 GHz procesorius, 8.00 GB RAM, SSD 477 GB.
+
+**V1.0** <br>
+Atlikta studentų rūšiavimo į dvi skirtingas grupes pagal galutinį pažymį spartos analizė pagal 3 strategijas:
+1) Ankstesniose versijose taikytas metodas - skaidyti studentus į nemoksas į moksliukus tiesiog iteruojant per Grupę ir išrūšiuojant juos į atitinkamus konteinerius.
+2) Iteruojam Grupes elementus (studentus) ir tikrinam jų galutinį pažymį. Neišlaikiusius išsaugome naujame konteineryje "nemoksos" ir ištriname juos iš Grupes, todėl Grupeje lieka tik "moksliukai". Čia jokie <algorithm> metodai nepanaudoti, sužaista su move() ir erase() funkcijom.
+3) Panaudojamos <algorithm> bibliotekos funkcijos partition() ir remove_if(), kurios leidžia efektyviai suskirstyti studentus į grupes pagal pažymį.
+
+Rezultatai: 
+<table>
+  <caption><b>1 STRATEGIJA</caption>
+    <thread>
+      <tr>
+        <th>Irašų skaičius</th>
+        <th>VEKTORIUS</th>
+        <th>SĄRAŠAS</th>
+      </tr>
+    </thread>
+      <tbody>
+        <tr>
+          <td>1000</td>
+          <td>0.0002</td>
+          <td>0.0003</td>
+        </tr>
+        <tr>
+          <td>10000</td>
+          <td>0.0008</td>
+          <td>0.0016</td>
+        </tr>
+        <tr>
+          <td>100000</td>
+          <td>0.0074</td>
+          <td>0.0166</td>
+        </tr>
+        <tr>
+          <td>1000000</td>
+          <td>0.0761</td>
+          <td>0.1643</td>
+        </tr>
+        <tr>
+          <td>10000000</td>
+          <td>3.2367</td>
+          <td>5.8738</td>
+        </tr>
+      </tbody>
+  </b>
+      </tbody>
+      </thread>
+</table>
+
+
+<table>
+  <caption><b>2 STRATEGIJA</caption>
+    <thread>
+      <tr>
+        <th>Irašų skaičius</th>
+        <th>VEKTORIUS</th>
+        <th>SĄRAŠAS</th>
+      </tr>
+    </thread>
+      <tbody>
+        <tr>
+          <td>1000</td>
+          <td>0.0001</td>
+          <td>0.0001</td>
+        </tr>
+        <tr>
+          <td>10000</td>
+          <td>0.0004</td>
+          <td>0.0007</td>
+        </tr>
+        <tr>
+          <td>100000</td>
+          <td>0.00029</td>
+          <td>0.0008</td>
+        </tr>
+        <tr>
+          <td>1000000</td>
+          <td>0.0322</td>
+          <td>0.0837</td>
+        </tr>
+        <tr>
+          <td>10000000</td>
+          <td>0.5013</td>
+          <td>0.9885</td>
+        </tr>
+      </tbody>
+  </b>
+      </tbody>
+      </thread>
+</table>
+
+
+<table>
+  <caption><b>3 STRATEGIJA</caption>
+    <thread>
+      <tr>
+        <th>Irašų skaičius</th>
+        <th>VEKTORIUS</th>
+        <th>SĄRAŠAS</th>
+      </tr>
+    </thread>
+      <tbody>
+        <tr>
+          <td>1000</td>
+          <td>0.0001</td>
+          <td>0.0001</td>
+        </tr>
+        <tr>
+          <td>10000</td>
+          <td>0.0006</td>
+          <td>0.0011</td>
+        </tr>
+        <tr>
+          <td>100000</td>
+          <td>0.0074</td>
+          <td>0.0137</td>
+        </tr>
+        <tr>
+          <td>1000000</td>
+          <td>0.0727</td>
+          <td>0.1341</td>
+        </tr>
+        <tr>
+          <td>10000000</td>
+          <td>1.0301</td>
+          <td>1.7417</td>
+        </tr>
+      </tbody>
+  </b>
+      </tbody>
+      </thread>
+</table>
+Išvados:
+-
+-
+-
+-
+**Naudojimosi instrukcija**
+1.
+2.
+3.
+4.
+5.
