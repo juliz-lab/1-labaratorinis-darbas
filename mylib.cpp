@@ -67,7 +67,7 @@ void pasiskirstymas_list_1(const list<Studentas> &Grupe, const int &irasu_sk)
     cout << irasu_sk << " saraso padalijimo i dvi grupes, vykdant 1 strategija, laikas " << t.elapsed() << endl;
 }
 
-void pasiskirstymas_vector_2(vector<Studentas> &Grupe, const int &irasu_sk)
+void pasiskirstymas_vector_2(vector<Studentas> Grupe, const int &irasu_sk)
 {
     Timer t;
     vector<Studentas> nemoksos;
@@ -90,7 +90,7 @@ void pasiskirstymas_vector_2(vector<Studentas> &Grupe, const int &irasu_sk)
     cout << irasu_sk << " vektoriaus padalijimo i dvi grupes, vykdant 2 strategija, laikas " << t.elapsed() << endl;
 }
 
-void pasiskirstymas_list_2(list<Studentas> &Grupe, const int &irasu_sk)
+void pasiskirstymas_list_2(list<Studentas> Grupe, const int &irasu_sk)
 {
     Timer t;
     list<Studentas> nemoksos;
