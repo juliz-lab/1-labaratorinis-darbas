@@ -49,7 +49,7 @@ struct Studentas
 vector<Studentas> generuok_vector(const int &stud_sk);
 void pasiskirstymas_vector_1(const vector<Studentas> &Grupe, const int &irasu_sk);
 void pasiskirstymas_list_1(const list<Studentas> &Grupe, const int &irasu_sk);
-void pasiskirstymas_vector_2(vector<Studentas> &Grupe, const int &irasu_sk);
-void pasiskirstymas_list_2(list<Studentas> &Grupe, const int &irasu_sk);
+void pasiskirstymas_vector_2(vector<Studentas> Grupe, const int &irasu_sk);
+void pasiskirstymas_list_2(list<Studentas> Grupe, const int &irasu_sk);
 void pasiskirstymas_vector_3(vector<Studentas> &Grupe, const int &irasu_sk);
 void pasiskirstymas_list_3(list<Studentas> &Grupe, const int &irasu_sk);
