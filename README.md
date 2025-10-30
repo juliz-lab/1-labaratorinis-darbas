@@ -153,7 +153,7 @@ Kompiuterio, su kuriuo atlikta analizė, parametrai: 2.00 GHz procesorius, 8.00 
 **V1.0** <br>
 Atlikta studentų rūšiavimo į dvi skirtingas grupes pagal galutinį pažymį spartos analizė pagal 3 strategijas:
 1) Ankstesniose versijose taikytas metodas - skaidyti studentus į nemoksas į moksliukus tiesiog iteruojant per Grupę ir išrūšiuojant juos į atitinkamus konteinerius.
-2) Iteruojam Grupes elementus (studentus) ir tikrinam jų galutinį pažymį. Neišlaikiusius išsaugome naujame konteineryje "nemoksos" ir ištriname juos iš Grupes, todėl Grupeje lieka tik "moksliukai". Čia jokie <algorithm> metodai nepanaudoti, sužaista su move() ir erase() funkcijom.
+2) Iteruojam Grupes elementus (studentus) ir tikrinam jų galutinį pažymį. Neišlaikiusius išsaugome naujame konteineryje "nemoksos" ir ištriname juos iš Grupes, todėl Grupeje lieka tik "moksliukai". Čia jokie `<algorithm>` metodai nepanaudoti, sužaista su move() ir erase() funkcijom.
 3) Panaudojamos <algorithm> bibliotekos funkcijos partition() ir remove_if(), kurios leidžia efektyviai suskirstyti studentus į grupes pagal pažymį.
 
 Rezultatai: 
@@ -281,14 +281,22 @@ Rezultatai:
       </tbody>
       </thread>
 </table>
-Išvados:
--
--
--
--
-**Naudojimosi instrukcija**
-1.
-2.
-3.
-4.
-5.
+<br>
+**Išvados:** <br>
+- 2 strategija su dideliais failais (įskaitant 10 mln) tiek su vektoriu tiek su sąrašu veikia stulbinamai greitai. <br>
+- Vektorius yra geresnis pasirinkimas duomenų saugojimui, nes praktiškais visais atvejais veikia greičiau už sąrašą. <br>
+- Su mažais duomenų kiekiais (1000-10000 įrašais) paprastesnė 1 strategija veikia kiek greičiau už kitas. <br>
+- 3 strategijai praktiškai neturi įtakos konteinerio tipo pasirinkimas.
+<br> <br>
+**Naudojimosi instrukcija** <br>
+1. Įsitikinkite, kad savo kompiuteryje turite įdiegtus C++ kompiliatorių bei projekto generavimo įrankius cmake, jei ne – įsidiekite. <br>
+    * Komandinėje eilutėje parašykite g++ --version, cmake --version. <br>
+2. Parsisiųskite failus main.cpp, mylib.cpp, mylib.h, timer.h ir CMakeLists.txt. <br>
+3. Sukurkite aplanką, kuriame bus vykdomas kodo paleidimas. Į jį įkelkite parsisiųstą failą CMakeLists.txt ir sukurkite aplankus „src“ bei „include“. <br>
+4. Į aplanką „src“ perkelkite visus parsisiųstus projekto .cpp failus, į aplanką „include“ – visus projekto .h failus. <br>
+5. Per komandinę eilutę nueikite iki savo aplankalo, kuriame paruošti failai programos paleidimui. Tuomet komandinėje eilutėje parašykite šias komandas: <br>
+  5.1. mkdir build <br>
+  5.2. cd build <br>
+  5.3. cmake [-DCMAKE_BUILD_TYPE=Release] .. <br>
+  5.4. cmake --build . <br>
+6. Buvo sukurtas vykdomasis failas v1_0.exe. Belieka jį pavykdyti, į komandinę eilutę parašant v1_0.exe. <br>
