@@ -281,7 +281,9 @@ Rezultatai:
       </tbody>
       </thread>
 </table>
-<br>
+
+
+
 **Išvados:** <br>
 - 2 strategija su dideliais failais (įskaitant 10 mln) tiek su vektoriu tiek su sąrašu veikia stulbinamai greitai. <br>
 - Vektorius yra geresnis pasirinkimas duomenų saugojimui, nes praktiškais visais atvejais veikia greičiau už sąrašą. <br>
