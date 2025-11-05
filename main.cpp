@@ -2,9 +2,10 @@
 
 int main()
 {
+
     for (int i = 1'000; i <= 10'000'000; i *= 10)
     {
-        vector<Studentas> Grupe = generuok_vector(i);
+        vector<Studentas> Grupe = Failo_nuskaitymas("../v1.0/studentai" + to_string(i) + ".txt");
         list<Studentas> Grupelist(Grupe.size());
         std::copy(Grupe.begin(), Grupe.end(), Grupelist.begin());
         pasiskirstymas_vector_1(Grupe, i);
