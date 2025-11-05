@@ -1,29 +1,41 @@
 #include "mylib.h"
 #include "timer.h"
 
-vector<Studentas> generuok_vector(const int &stud_sk)
+vector<Studentas> Failo_nuskaitymas(const string &failas)
 {
-    vector<Studentas> Grupe;
-    Grupe.reserve(stud_sk);
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> dist(1, 10); // uztikrina, kad skaiciai butu butent nuo 1 iki 10.
-
-    for (int i = 0; i <= stud_sk; i++)
+    ifstream fd(failas);
+    if (!fd)
     {
-        Studentas temp;
-        int suma = 0;
-        temp.var = "Vardas" + to_string(i);
-        temp.pav = "Pavarde" + to_string(i);
-        for (int j = 1; j <= 5; j++)
+        cout << "nepavyko atidaryti failo: " << failas << endl;
+        return {};
+    }
+    else
+    {
+        cout << "Nuskaitomas " << failas << endl;
+    }
+    stringstream buffer;
+    vector<Studentas> Grupe;
+    string eil;
+    buffer << fd.rdbuf(); // Visas failas iš karto perkeliamas į buferį
+    fd.close();
+    getline(buffer, eil);
+    while (getline(buffer, eil))
+    {
+        Studentas stud;
+        int paz, suma = 0;
+        istringstream iss(eil); // paverčiame eilutę į objektą.
+        iss >> stud.var >> stud.pav;
+        while (iss >> paz)
         {
-            int p = dist(gen);
-            suma += p;
-            temp.paz.push_back(p);
+            stud.paz.push_back(paz);
+            suma += paz;
         }
-        temp.egz = dist(gen);
-        temp.gal = 0.4 * (suma * 1.0 / 5.0) + 0.6 * temp.egz;
-        Grupe.push_back(temp);
+        suma -= paz;
+        stud.egz = stud.paz.back();
+        stud.paz.pop_back();
+        stud.gal = double(suma) / double(stud.paz.size()) * 0.4 + 0.6 * stud.egz;
+        // stud.med = double(Mediana(stud)) * 0.4 + 0.6 * stud.egz;
+        Grupe.push_back(stud);
     }
     return Grupe;
 }
@@ -47,6 +59,10 @@ void pasiskirstymas_vector_1(const vector<Studentas> &Grupe, const int &irasu_sk
         }
     }
     cout << irasu_sk << " vektoriaus padalijimo i dvi grupes, vykdant 1 strategija, laikas " << t.elapsed() << endl;
+    if (irasu_sk == 1000)
+    {
+        Spausdink(moksliukai, nemoksos, "1", "vector");
+    }
 }
 
 void pasiskirstymas_list_1(const list<Studentas> &Grupe, const int &irasu_sk)
@@ -55,7 +71,7 @@ void pasiskirstymas_list_1(const list<Studentas> &Grupe, const int &irasu_sk)
     list<Studentas> moksliukai, nemoksos;
     for (auto &stud : Grupe)
     {
-        if (stud.gal >= 0.5)
+        if (stud.gal >= 5.0)
         {
             moksliukai.push_back(stud);
         }
@@ -65,6 +81,10 @@ void pasiskirstymas_list_1(const list<Studentas> &Grupe, const int &irasu_sk)
         }
     }
     cout << irasu_sk << " saraso padalijimo i dvi grupes, vykdant 1 strategija, laikas " << t.elapsed() << endl;
+    if (irasu_sk == 1000)
+    {
+        Spausdink(moksliukai, nemoksos, "1", "list");
+    }
 }
 
 void pasiskirstymas_vector_2(vector<Studentas> Grupe, const int &irasu_sk)
@@ -88,6 +108,10 @@ void pasiskirstymas_vector_2(vector<Studentas> Grupe, const int &irasu_sk)
     }
     Grupe.erase(Grupe.begin() + i, Grupe.end());
     cout << irasu_sk << " vektoriaus padalijimo i dvi grupes, vykdant 2 strategija, laikas " << t.elapsed() << endl;
+    if (irasu_sk == 1000)
+    {
+        Spausdink(Grupe, nemoksos, "2", "vector");
+    }
 }
 
 void pasiskirstymas_list_2(list<Studentas> Grupe, const int &irasu_sk)
@@ -107,6 +131,10 @@ void pasiskirstymas_list_2(list<Studentas> Grupe, const int &irasu_sk)
         }
     }
     cout << irasu_sk << " saraso padalijimo i dvi grupes, vykdant 2 strategija, laikas " << t.elapsed() << endl;
+    if (irasu_sk == 1000)
+    {
+        Spausdink(Grupe, nemoksos, "2", "list");
+    }
 }
 
 void pasiskirstymas_vector_3(vector<Studentas> &Grupe, const int &irasu_sk)
@@ -122,6 +150,10 @@ void pasiskirstymas_vector_3(vector<Studentas> &Grupe, const int &irasu_sk)
     Grupe.erase(it, Grupe.end());
 
     cout << irasu_sk << " vektoriaus padalijimo i dvi grupes, vykdant 3 strategija, laikas " << t.elapsed() << endl;
+    if (irasu_sk == 1000)
+    {
+        Spausdink(Grupe, nemoksos, "3", "vector");
+    }
 }
 
 void pasiskirstymas_list_3(list<Studentas> &Grupe, const int &irasu_sk)
@@ -138,4 +170,8 @@ void pasiskirstymas_list_3(list<Studentas> &Grupe, const int &irasu_sk)
                         return false; // paliks studenta
                     });
     cout << irasu_sk << " saraso padalijimo i dvi grupes, vykdant 3 strategija, laikas " << t.elapsed() << endl;
+    if (irasu_sk == 1000)
+    {
+        Spausdink(Grupe, nemoksos, "3", "list");
+    }
 }
